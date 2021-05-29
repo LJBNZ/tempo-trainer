@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Tempo Trainer</string>
+    <string name="backswing_field_text">Backswing time (ms)</string>
+    <string name="downswing_field_text">Downswing time (ms)</string>
+    <string name="start_button_text">Go</string>
 </resources>
