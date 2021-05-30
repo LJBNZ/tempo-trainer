@@ -11,7 +11,7 @@
         android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start_button_text"
+        android:text="@string/button_stopped_text"
         app:layout_constraintBottom_toTopOf="@+id/tempoSlider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,37 +19,39 @@
 
     <SeekBar
         android:id="@+id/tempoSlider"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        app:layout_constraintBottom_toTopOf="@+id/backswingTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/startButton" />
 
     <EditText
         android:id="@+id/backswingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
         android:text="@string/backswing_field_text"
+        app:layout_constraintBottom_toTopOf="@+id/downswingTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempoSlider"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/tempoSlider" />
 
     <EditText
         android:id="@+id/downswingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:importantForAutofill="no"
         android:inputType="numberDecimal"
         android:text="@string/downswing_field_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backswingTime"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/backswingTime" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
