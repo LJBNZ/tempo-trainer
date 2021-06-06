@@ -7,40 +7,61 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainFragment">
 
+    <TextView
+        android:id="@+id/backswingTimeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/backswing_time_title"
+        app:layout_constraintBottom_toTopOf="@+id/guideline6"
+        app:layout_constraintEnd_toStartOf="@+id/downswingTimeTitle"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/downswingTimeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/downswing_time_title"
+        app:layout_constraintBottom_toTopOf="@+id/guideline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/backswingTimeTitle" />
+
+    <TextView
+        android:id="@+id/tempoSliderLowText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/tempoSlider"
+        app:layout_constraintTop_toBottomOf="@+id/tempoSlider" />
+
     <SeekBar
         android:id="@+id/tempoSlider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/backswingTime"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintStart_toStartOf="@+id/guideline4" />
 
-    <EditText
-        android:id="@+id/backswingTime"
+    <TextView
+        android:id="@+id/tempoSliderHighText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:importantForAutofill="no"
-        android:inputType="numberDecimal"
-        android:text="@string/backswing_field_text"
-        app:layout_constraintBottom_toTopOf="@+id/downswingTime"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/tempoSlider"
         app:layout_constraintTop_toBottomOf="@+id/tempoSlider" />
 
-    <EditText
-        android:id="@+id/downswingTime"
+    <TextView
+        android:id="@+id/tempoSliderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:importantForAutofill="no"
-        android:inputType="numberDecimal"
-        android:text="@string/downswing_field_text"
-        app:layout_constraintBottom_toTopOf="@+id/startButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backswingTime" />
+        android:layout_marginBottom="16dp"
+        android:text="@string/tempo_slider_title"
+        app:layout_constraintBottom_toTopOf="@+id/tempoSliderValueText"
+        app:layout_constraintEnd_toEndOf="@+id/tempoSlider"
+        app:layout_constraintStart_toStartOf="@+id/tempoSlider" />
 
     <Button
         android:id="@+id/startButton"
@@ -50,6 +71,114 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/downswingTime" />
+        app:layout_constraintTop_toTopOf="@+id/guideline6" />
+
+    <TextView
+        android:id="@+id/backswingTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/backswingTimeTitle"
+        app:layout_constraintStart_toStartOf="@+id/backswingTimeTitle"
+        app:layout_constraintTop_toBottomOf="@+id/backswingTimeTitle" />
+
+    <TextView
+        android:id="@+id/downswingTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/downswingTimeTitle"
+        app:layout_constraintStart_toStartOf="@+id/downswingTimeTitle"
+        app:layout_constraintTop_toBottomOf="@+id/downswingTimeTitle" />
+
+    <TextView
+        android:id="@+id/speedSliderText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/speed_slider_title"
+        app:layout_constraintBottom_toTopOf="@+id/speedSliderValueText"
+        app:layout_constraintEnd_toEndOf="@+id/speedSlider"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="@+id/speedSlider" />
+
+    <SeekBar
+        android:id="@+id/speedSlider"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintStart_toStartOf="@+id/guideline4" />
+
+    <TextView
+        android:id="@+id/speedSliderHighText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/speed_slider_high_hint"
+        app:layout_constraintEnd_toEndOf="@+id/speedSlider"
+        app:layout_constraintTop_toBottomOf="@+id/speedSlider" />
+
+    <TextView
+        android:id="@+id/speedSliderLowText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/speed_slider_low_hint"
+        app:layout_constraintStart_toStartOf="@+id/speedSlider"
+        app:layout_constraintTop_toBottomOf="@+id/speedSlider" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <TextView
+        android:id="@+id/tempoSliderValueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/tempoSlider"
+        app:layout_constraintEnd_toEndOf="@+id/tempoSlider"
+        app:layout_constraintStart_toStartOf="@+id/tempoSlider" />
+
+    <TextView
+        android:id="@+id/speedSliderValueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/speedSlider"
+        app:layout_constraintEnd_toEndOf="@+id/speedSlider"
+        app:layout_constraintStart_toStartOf="@+id/speedSlider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

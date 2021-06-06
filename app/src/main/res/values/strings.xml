@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">Tempo Trainer</string>
-    <string name="backswing_field_text">Backswing time (seconds)</string>
-    <string name="downswing_field_text">Downswing time (seconds)</string>
     <string name="button_stopped_text">Start</string>
     <string name="button_running_text">Stop</string>
+    <string name="tempo_slider_title">Tempo Ratio</string>
+    <string name="speed_slider_title">Swing Speed</string>
+    <string name="speed_slider_low_hint">Faster</string>
+    <string name="speed_slider_high_hint">Slower</string>
+    <string name="downswing_time_title">Downswing Time</string>
+    <string name="backswing_time_title">Backswing Time</string>
 </resources>

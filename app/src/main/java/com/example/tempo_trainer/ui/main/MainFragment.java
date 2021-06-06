@@ -9,30 +9,31 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.tempo_trainer.R;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 
 
 public class MainFragment extends Fragment {
 
     private MainViewModel viewModel;
 
+    // high-touch views
     private Button startButton;
-    private EditText backswingTimeField;
-    private EditText downswingTimeField;
     private SeekBar tempoSlider;
+    private TextView tempoSliderValueText;
+    private SeekBar speedSlider;
+    private TextView speedSliderValueText;
+    private TextView backswingTimeText;
+    private TextView downswingTimeText;
+
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -49,32 +50,41 @@ public class MainFragment extends Fragment {
 
         // cache heavily accessed views
         startButton = mainFragment.findViewById(R.id.startButton);
-        backswingTimeField = mainFragment.findViewById(R.id.backswingTime);
-        downswingTimeField = mainFragment.findViewById(R.id.downswingTime);
         tempoSlider = mainFragment.findViewById(R.id.tempoSlider);
+        tempoSliderValueText = mainFragment.findViewById(R.id.tempoSliderValueText);
+        speedSlider = mainFragment.findViewById(R.id.speedSlider);
+        speedSliderValueText = mainFragment.findViewById(R.id.speedSliderValueText);
+        downswingTimeText = mainFragment.findViewById(R.id.downswingTimeText);
+        backswingTimeText = mainFragment.findViewById(R.id.backswingTimeText);
 
-        // set default values before listeners are attached
-        backswingTimeField.setText(String.valueOf(viewModel.defaultBackswingDuration));
-        downswingTimeField.setText(String.valueOf(viewModel.defaultDownswingDuration));
+        // set seek bar default and max steps
+        tempoSlider.setMax(viewModel.numTempoSteps);
+        tempoSlider.setProgress(viewModel.defaultTempoStep);
 
-        int maxTempoSliderStep = (int) (viewModel.maxRatio - viewModel.minRatio) * 10;
-        tempoSlider.setMax(maxTempoSliderStep);
-        int defaultTempoSliderStep = (int) (viewModel.defaultRatio - viewModel.minRatio) * 10;
-        tempoSlider.setProgress(defaultTempoSliderStep);
+        speedSlider.setMax(viewModel.numDownswingSteps);
+        speedSlider.setProgress(viewModel.defaultDownswingStep);
+
+        TextView tempoRatioLowText = mainFragment.findViewById(R.id.tempoSliderLowText);
+        tempoRatioLowText.setText(formatRatio(viewModel.minTempoRatio));
+        TextView tempoRatioHighText = mainFragment.findViewById(R.id.tempoSliderHighText);
+        tempoRatioHighText.setText(formatRatio(viewModel.maxTempoRatio));
 
         // set up view listeners
         startButton.setOnClickListener(buttonClickListener);
-        backswingTimeField.addTextChangedListener(backswingFieldWatcher);
-        downswingTimeField.addTextChangedListener(downswingFieldWatcher);
         tempoSlider.setOnSeekBarChangeListener(tempoSliderListener);
+        speedSlider.setOnSeekBarChangeListener(speedSliderListener);
 
         // set up observers of view model data
         viewModel.getRunning().observe(this, runningObserver);
-        viewModel.getBackswingDuration().observe(this, backswingDurationObserver);
-        viewModel.getDownswingDuration().observe(this, downswingDurationObserver);
+        viewModel.getBackswingTime().observe(this, backswingTimeObserver);
+        viewModel.getDownswingTime().observe(this, downswingTimeObserver);
         viewModel.getTempoRatio().observe(this, tempoRatioObserver);
 
         return mainFragment;
+    }
+
+    private String formatRatio(double ratio) {
+        return String.format("%s:1", new DecimalFormat("#.#").format(ratio));
     }
 
     private final Observer<Boolean> runningObserver = new Observer<Boolean>() {
@@ -88,82 +98,33 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private final Observer<Double> backswingDurationObserver = new Observer<Double>() {
+    private final Observer<Double> backswingTimeObserver = new Observer<Double>() {
         @Override
-        public void onChanged(Double duration) {
-            backswingTimeField.removeTextChangedListener(backswingFieldWatcher);
-            DecimalFormat df = new DecimalFormat("0.###",
-                    new DecimalFormatSymbols(Locale.getDefault()));
-            backswingTimeField.setText(df.format(duration));
-            backswingTimeField.addTextChangedListener(backswingFieldWatcher);
-            System.out.println("setting backswing text");
+        public void onChanged(Double time) {
+            DecimalFormat df = new DecimalFormat("0.000");
+            backswingTimeText.setText(String.format("%s sec", df.format(time)));
         }
     };
 
-    private final Observer<Double> downswingDurationObserver = new Observer<Double>() {
+    private final Observer<Double> downswingTimeObserver = new Observer<Double>() {
         @Override
-        public void onChanged(Double duration) {
-            downswingTimeField.removeTextChangedListener(downswingFieldWatcher);
-            DecimalFormat df = new DecimalFormat("0.###",
-                    new DecimalFormatSymbols(Locale.getDefault()));
-            downswingTimeField.setText(df.format(duration));
-            downswingTimeField.addTextChangedListener(downswingFieldWatcher);
-            System.out.println("setting downswing text");
+        public void onChanged(Double time) {
+            DecimalFormat df = new DecimalFormat("0.000");
+            downswingTimeText.setText(String.format("%s sec", df.format(time)));
         }
     };
 
     private final Observer<Double> tempoRatioObserver = new Observer<Double>() {
         @Override
-        public void onChanged(Double duration) {
-//            TODO
+        public void onChanged(Double ratio) {
+            tempoSliderValueText.setText(formatRatio(ratio));
         }
     };
-
 
     private final View.OnClickListener buttonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             viewModel.toggleRunning();
-        }
-    };
-
-    private final TextWatcher backswingFieldWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            viewModel.forceStop();
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            try {
-                Double duration = Double.parseDouble(s.toString());
-                viewModel.setBackswingDuration(duration);
-            } catch (Exception e) {
-                backswingTimeField.setError("Invalid backswing duration");
-            }
-        }
-    };
-
-    private final TextWatcher downswingFieldWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            viewModel.forceStop();
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            try {
-                Double duration = Double.parseDouble(s.toString());
-                viewModel.setDownswingDuration(duration);
-            } catch (Exception e) {
-                downswingTimeField.setError("Invalid downswing duration");
-            }
         }
     };
 
@@ -173,6 +134,21 @@ public class MainFragment extends Fragment {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             viewModel.forceStop();
             viewModel.setTempoStep(progress);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {}
+    };
+
+    private final SeekBar.OnSeekBarChangeListener speedSliderListener =
+            new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            viewModel.forceStop();
+            viewModel.setDownswingStep(progress);
         }
 
         @Override

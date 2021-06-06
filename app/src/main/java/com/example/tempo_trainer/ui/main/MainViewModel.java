@@ -11,15 +11,19 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<Double> tempoRatio;
     private MutableLiveData<Boolean> running;
 
-    public Double minRatio = 1.0;
-    public Double maxRatio = 5.0;
-    public Double defaultRatio = 3.0;
+    public double minTempoRatio = 2.0;
+    public double maxTempoRatio = 4.0;
+    public double defaultTempoRatio = 3.0;
+    public double tempoStepResolution = 0.1;
+    public int numTempoSteps = (int) ((maxTempoRatio - minTempoRatio) / tempoStepResolution);
+    public int defaultTempoStep = (int) ((defaultTempoRatio - minTempoRatio) / tempoStepResolution);
 
-    public Double minSwingPartDuration = 0.1;
-    public Double maxSwingPartDuration = 5.0;
-
-    public Double defaultBackswingDuration = 0.750;
-    public Double defaultDownswingDuration = 0.250;
+    public double minDownswingTime = 0.2;
+    public double maxDownswingTime = 0.5;
+    public double defaultDownswingTime = 0.35;
+    public double downswingStepResolution = 0.005;
+    public int numDownswingSteps = (int) ((maxDownswingTime - minDownswingTime) / downswingStepResolution);
+    public int defaultDownswingStep = (int) ((defaultDownswingTime - minDownswingTime) / downswingStepResolution);
 
     public MutableLiveData<Boolean> getRunning() {
         if (running == null) {
@@ -27,57 +31,51 @@ public class MainViewModel extends ViewModel {
         }
         return running;
     }
-    public MutableLiveData<Double> getBackswingDuration() {
+    public MutableLiveData<Double> getBackswingTime() {
         if (backswingDuration == null) {
-            backswingDuration = new MutableLiveData<Double>(defaultBackswingDuration);
+            backswingDuration = new MutableLiveData<Double>(calculateBackswingTime());
         }
         return backswingDuration;
     }
-    public MutableLiveData<Double> getDownswingDuration() {
+    public MutableLiveData<Double> getDownswingTime() {
         if (downswingDuration == null) {
-            downswingDuration = new MutableLiveData<Double>(defaultDownswingDuration);
+            downswingDuration = new MutableLiveData<Double>(defaultDownswingTime);
         }
         return downswingDuration;
     }
     public MutableLiveData<Double> getTempoRatio() {
         if (tempoRatio == null) {
-            tempoRatio = new MutableLiveData<Double>(defaultRatio);
+            tempoRatio = new MutableLiveData<Double>(defaultTempoRatio);
         }
         return tempoRatio;
     }
 
-    public void setBackswingDuration(Double duration) {
-        // TODO error checking
-        Double ratio = getTempoRatio().getValue();
-        getBackswingDuration().setValue(duration);
-        Double newDownswingDuration = duration / ratio;
-        getDownswingDuration().setValue(newDownswingDuration);
-        debugPrint();
+    private double calculateBackswingTime() {
+        return getDownswingTime().getValue() * getTempoRatio().getValue();
     }
 
-    public void setDownswingDuration(Double duration) {
-        // TODO error checking
-        Double ratio = getTempoRatio().getValue();
-        getDownswingDuration().setValue(duration);
-        Double newBackswingDuration = duration * ratio;
-        getBackswingDuration().setValue(newBackswingDuration);
+
+    public void setDownswingStep(int downswingStep) {
+        double downswingTime = minDownswingTime + (double) downswingStep * downswingStepResolution;
+        getDownswingTime().setValue(downswingTime);
+        double newBackswingTime = calculateBackswingTime();
+        getBackswingTime().setValue(newBackswingTime);
         debugPrint();
     }
 
     public void setTempoStep(int tempoStep) {
-        // TODO error checking
-        Double ratio = minRatio + (double) tempoStep / 10;  // convert steps to ratio
-        Double downswingDuration = getDownswingDuration().getValue();
-        Double newBackswingDuration = downswingDuration * ratio;
-        getBackswingDuration().setValue(newBackswingDuration);
+        double ratio = minTempoRatio + (double) tempoStep * tempoStepResolution;
+        getTempoRatio().setValue(ratio);
+        double newBackswingTime = calculateBackswingTime();
+        getBackswingTime().setValue(newBackswingTime);
         debugPrint();
     }
 
     private void debugPrint() {
         System.out.printf(Locale.getDefault(),
                 "bs: %f, ds: %f, ratio: %f",
-                getBackswingDuration().getValue(),
-                getDownswingDuration().getValue(),
+                getBackswingTime().getValue(),
+                getDownswingTime().getValue(),
                 getTempoRatio().getValue());
     }
 
