@@ -11,9 +11,9 @@ enum waveType {sine, sawTooth, square, triangle};
 
 class Synthesizer {
 public:
-    void setSampleRate(int32_t sampleRate);
-
+    int32_t sampleRate = 0;
     void render(float *audioData, int waveShape, int32_t numFrames);
+    void setSampleRate(int32_t sampleRate);
 
 private:
     void renderSineWave_(float *audioData, int32_t numFrames);

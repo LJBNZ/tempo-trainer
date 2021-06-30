@@ -9,9 +9,11 @@
 
 class WaveGenerator {
 public:
-    WaveGenerator(int32_t sampleRate, float frequency, float amplitude, float sweep=0.0, float rise=0.0);
+    WaveGenerator(float frequency, float amplitude, float sweep=0.0, float rise=0.0);
     void renderWave(float *audioData, int32_t numFrames);
     virtual double waveFunction(double phase);
+    virtual void setSampleRate(int32_t sampleRate);
+
 protected:
     double phase_ = 0.0;
     double phaseIncrement_ = 0.0;

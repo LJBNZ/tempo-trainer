@@ -3,7 +3,7 @@
 //
 
 #include "Synthesizer.h"
-#include "WaveGenerator.h"
+#include "SineWaveGenerator.cpp"
 
 void Synthesizer::render(float *audioData, int waveShape, int32_t numFrames) {
     switch (waveShape) {
@@ -22,5 +22,15 @@ void Synthesizer::render(float *audioData, int waveShape, int32_t numFrames) {
     }
 }
 
+void Synthesizer::setSampleRate(int32_t sampleRate) {
+    sampleRate = sampleRate;
+}
+
 void Synthesizer::renderSineWave_(float *audioData, int32_t numFrames) {
+    SineWaveGenerator* sw = new SineWaveGenerator(500.0, 1.0);
+    sw->setSampleRate(sampleRate);
+
+    for (int i = 0; i < numFrames; i++) {
+        audioData[i] = (float) sw->waveFunction();
+    }
 }
