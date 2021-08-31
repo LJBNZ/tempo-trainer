@@ -14,6 +14,9 @@ public:
     void stop();
     void restart();
 
+    void addWave(waveType waveShape, float frequency, float amplitude, float sweep, float rise);
+    void clearWaves();
+
 private:
     Synthesizer synthesizer_;
     AAudioStream *stream_;

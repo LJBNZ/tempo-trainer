@@ -11,6 +11,10 @@ WaveGenerator::WaveGenerator(float frequency, float amplitude, float sweep, floa
     rise_ = rise;
 }
 
-double WaveGenerator::waveFunction(double phase) {};
+void WaveGenerator::renderWave(float *audioData, int32_t numFrames, int32_t sampleRate) {};
 
-void WaveGenerator::setSampleRate(int32_t sampleRate) {};
+double WaveGenerator::waveFunction() {
+    return 0.0;
+};
+
+void WaveGenerator::setSampleRate_(int32_t sampleRate) {};

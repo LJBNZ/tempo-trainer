@@ -6,6 +6,7 @@
 #include "AudioEngine.h"
 #include <thread>
 #include <mutex>
+#include <iostream>
 
 // Double-buffering offers a good tradeoff between latency and protection against glitches.
 constexpr int32_t kBufferSizeInBursts = 2;
@@ -16,8 +17,7 @@ aaudio_data_callback_result_t dataCallback(
         void *audioData,
         int32_t numFrames) {
 
-    // TODO make wave type dynamic
-    ((Synthesizer *) (userData))->render(static_cast<float *>(audioData), waveType::sine, numFrames);
+    ((Synthesizer *) (userData))->render(static_cast<float *>(audioData), numFrames);
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
 }
 
@@ -83,4 +83,12 @@ void AudioEngine::stop() {
         AAudioStream_requestStop(stream_);
         AAudioStream_close(stream_);
     }
+}
+
+void AudioEngine::addWave(waveType waveShape, float frequency, float amplitude, float sweep, float rise) {
+    synthesizer_.addWave(waveShape, frequency, amplitude, sweep, rise);
+}
+
+void AudioEngine::clearWaves() {
+    synthesizer_.clearWaves();
 }

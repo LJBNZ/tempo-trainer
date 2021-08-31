@@ -10,9 +10,8 @@
 class WaveGenerator {
 public:
     WaveGenerator(float frequency, float amplitude, float sweep=0.0, float rise=0.0);
-    void renderWave(float *audioData, int32_t numFrames);
-    virtual double waveFunction(double phase);
-    virtual void setSampleRate(int32_t sampleRate);
+    virtual void renderWave(float *audioData, int32_t numFrames, int32_t sampleRate);
+    virtual double waveFunction();
 
 protected:
     double phase_ = 0.0;
@@ -21,6 +20,8 @@ protected:
     float amplitude_;
     float sweep_;
     float rise_;
+
+    virtual void setSampleRate_(int32_t sampleRate);
 };
 
 #endif //TEMPO_TRAINER_WAVEGENERATOR_H
