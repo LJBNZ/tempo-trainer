@@ -3,12 +3,13 @@
 //
 
 #include "Synthesizer.h"
-#include "WaveGenerator.h"
+#include "SineWaveGenerator.cpp"
 
-void Synthesizer::render(float *audioData, int waveShape, int32_t numFrames) {
+void Synthesizer::addWave(waveType waveShape, float frequency, float amplitude, float sweep=0.0,
+                          float rise=0.0) {
     switch (waveShape) {
         case waveType::sine:
-            renderSineWave_(audioData, numFrames);
+            waves_.push_back(new SineWaveGenerator(frequency, amplitude, sweep=sweep, rise=rise));
             break;
         case waveType::sawTooth:
             // TODO
@@ -19,8 +20,22 @@ void Synthesizer::render(float *audioData, int waveShape, int32_t numFrames) {
         case waveType::triangle:
             // TODO
             break;
+        default:
+            break;
     }
 }
 
-void Synthesizer::renderSineWave_(float *audioData, int32_t numFrames) {
+void Synthesizer::clearWaves() {
+    waves_.clear();
+}
+
+void Synthesizer::render(float *audioData, int32_t numFrames) {
+    for (int i = 0; i < waves_.size(); i++) {
+        WaveGenerator* gen = waves_[i];
+        gen->renderWave(audioData, numFrames, sampleRate);
+    }
+}
+
+void Synthesizer::setSampleRate(int32_t sampleRate) {
+    this->sampleRate = sampleRate;
 }

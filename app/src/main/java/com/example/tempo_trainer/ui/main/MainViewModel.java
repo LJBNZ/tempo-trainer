@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.Locale;
 
+import com.example.tempo_trainer.audio.AudioManager;
+
 public class MainViewModel extends ViewModel {
     private MutableLiveData<Double> backswingDuration;
     private MutableLiveData<Double> downswingDuration;
     private MutableLiveData<Double> tempoRatio;
     private MutableLiveData<Boolean> running;
+    private AudioManager audioManager;
 
     public double minTempoRatio = 2.0;
     public double maxTempoRatio = 4.0;
@@ -25,24 +28,36 @@ public class MainViewModel extends ViewModel {
     public int numDownswingSteps = (int) ((maxDownswingTime - minDownswingTime) / downswingStepResolution);
     public int defaultDownswingStep = (int) ((defaultDownswingTime - minDownswingTime) / downswingStepResolution);
 
+    public MainViewModel() {
+        audioManager = new AudioManager();
+    }
+
+    static {
+        // load our built native audio engine shared library .dll
+        System.loadLibrary("native-audioengine");
+    }
+
     public MutableLiveData<Boolean> getRunning() {
         if (running == null) {
             running = new MutableLiveData<Boolean>(false);
         }
         return running;
     }
+
     public MutableLiveData<Double> getBackswingTime() {
         if (backswingDuration == null) {
             backswingDuration = new MutableLiveData<Double>(calculateBackswingTime());
         }
         return backswingDuration;
     }
+
     public MutableLiveData<Double> getDownswingTime() {
         if (downswingDuration == null) {
             downswingDuration = new MutableLiveData<Double>(defaultDownswingTime);
         }
         return downswingDuration;
     }
+
     public MutableLiveData<Double> getTempoRatio() {
         if (tempoRatio == null) {
             tempoRatio = new MutableLiveData<Double>(defaultTempoRatio);
@@ -53,7 +68,6 @@ public class MainViewModel extends ViewModel {
     private double calculateBackswingTime() {
         return getDownswingTime().getValue() * getTempoRatio().getValue();
     }
-
 
     public void setDownswingStep(int downswingStep) {
         double downswingTime = minDownswingTime + (double) downswingStep * downswingStepResolution;
@@ -84,6 +98,12 @@ public class MainViewModel extends ViewModel {
     }
 
     public void toggleRunning() {
-        getRunning().setValue(!getRunning().getValue());
+        boolean newRunningStatus = !getRunning().getValue();
+        getRunning().setValue(newRunningStatus);
+        if (newRunningStatus) {
+            audioManager.start();
+        } else {
+            audioManager.stop();
+        }
     }
 }
